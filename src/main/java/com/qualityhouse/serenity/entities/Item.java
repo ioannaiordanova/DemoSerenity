@@ -1,11 +1,21 @@
 package com.qualityhouse.serenity.entities;
 
 public class Item {
+    private String article;
+
     private String quantity;
 
     private String size;
 
     private String color;
+
+    public String getArticle() {
+        return article;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
+    }
 
     public String getQuantity() {
         return quantity;

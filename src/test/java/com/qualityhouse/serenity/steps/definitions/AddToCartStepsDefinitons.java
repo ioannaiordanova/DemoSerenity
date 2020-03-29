@@ -2,8 +2,7 @@ package com.qualityhouse.serenity.steps.definitions;
 
 
 
-import com.qualityhouse.serenity.page_objects.HomePage;
-import cucumber.api.java.en.And;
+import com.qualityhouse.serenity.page_objects.ShoppingBasketPage;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import com.qualityhouse.serenity.steps.libraries.AddToCartActions;
@@ -26,7 +25,7 @@ public class AddToCartStepsDefinitons {
 
         @When("^then John selected to \"([^\"]*)\" product$")
         public void thenJhonSelectedToProduct(String product_number) {
-              dimo.selectedProductByNumber(product_number);
+              dimo.selectedProductByName(product_number);
         }
 
          @When("^then choose its quantity,size and color and submitted to cart:$")
@@ -39,10 +38,10 @@ public class AddToCartStepsDefinitons {
     public void heShouldSeeWhatHasOrderedOnTheShoppingCartSummaryPage(List<Item> data) {
         Item article = data.get(0);
         SoftAssertions assertSoftly = new SoftAssertions();
-        assertSoftly.assertThat(dimo.getValueFrom(HomePage.CART_QUANTITY)).isEqualTo(article.getQuantity());
-        assertSoftly.assertThat(dimo.readsTextFrom(HomePage.CART_DESCRIPTION).contains(article.getColor()));
-        assertSoftly.assertThat(dimo.readsTextFrom(HomePage.CART_DESCRIPTION).contains(article.getSize()));
-
+        assertSoftly.assertThat(dimo.getValueFrom(ShoppingBasketPage.CART_QUANTITY)).isEqualTo(article.getQuantity());
+        assertSoftly.assertThat(dimo.readsTextFrom(ShoppingBasketPage.CART_DESCRIPTION).contains(article.getColor()));
+        assertSoftly.assertThat(dimo.readsTextFrom(ShoppingBasketPage.CART_DESCRIPTION).contains(article.getSize()));
+        assertSoftly.assertThat(dimo.readsTextFrom(ShoppingBasketPage.CART_PRODUCT_NAME).equalsIgnoreCase(article.getArticle()));
         assertSoftly.assertAll();
     }
 }

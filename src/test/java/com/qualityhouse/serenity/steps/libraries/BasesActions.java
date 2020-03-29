@@ -134,12 +134,11 @@ public class BasesActions
 
     public WebElementFacade getFromUnorderedListWebElementByText(By locator,String elementTag ,String visibleText){
 
-        String searchText = "AppraisersGroupTest";
         WebElementFacade ulList = currentPage.find(locator);
         List<WebElementFacade> elements = ulList.thenFindAll(By.tagName(elementTag));
         for (WebElementFacade element : elements)
         {
-            if (element.getText().equals(visibleText))
+            if (element.getText().equalsIgnoreCase(visibleText))
             {
                 return element;
             }
