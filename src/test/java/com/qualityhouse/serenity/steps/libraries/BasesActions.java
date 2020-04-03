@@ -2,6 +2,7 @@ package com.qualityhouse.serenity.steps.libraries;
 
 import com.qualityhouse.serenity.page_objects.BasePage;
 import com.qualityhouse.serenity.page_objects.HomePage;
+import com.qualityhouse.serenity.steps.definitions.AddToCartStepsDefinitons;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.Step;
 import org.openqa.selenium.By;
@@ -10,8 +11,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static java.lang.Thread.sleep;
 
@@ -22,6 +26,10 @@ import static java.lang.Thread.sleep;
 public class BasesActions
 {
     private BasePage currentPage;
+
+    protected void navigateToURL(){
+        currentPage.open();
+    }
 
     @Step( "Enters '{1}' in field {0}" )
     protected void fillsFieldWithData( WebElementFacade fieldElement,
@@ -88,7 +96,8 @@ public class BasesActions
         return webElement.isVisible();
     }
 
-    @Step
+
+    @Step ("Read the text from Web Element")
     public String readsTextFrom( WebElementFacade webElement )
     {
         return webElement.waitUntilVisible()
@@ -96,7 +105,7 @@ public class BasesActions
                          .trim();
     }
 
-    @Step
+    @Step ("Clicks on Web Element")
     public void clicksOn( final By locator )
     {
         currentPage.find( locator )
@@ -104,18 +113,17 @@ public class BasesActions
                    .click();
     }
 
-    public void clicksOnXY(WebElementFacade element,Integer xOffset,Integer yOffset) {
+    public void moveToElementAndClicksOnXY(WebElementFacade element,Integer xOffset,Integer yOffset) {
 
         Actions act = new Actions(currentPage.getDriver());
         act.moveToElement(element,xOffset,yOffset).click().build().perform();
 
     }
 
-    public void selectFromUnorderedListATagByName(By locator,String Tag ,String itemValue){
+    public void findLinkByParentAndNameAndClick(By locator,  String itemValue){
 
-        String searchText = "AppraisersGroupTest";
         WebElementFacade ulList = currentPage.find(locator);
-        List<WebElementFacade> options = ulList.thenFindAll(By.tagName(Tag));
+        List<WebElementFacade> options = ulList.thenFindAll(By.tagName("a"));
         for (WebElementFacade option : options)
         {
             if (option.getAttribute("Name").equals(itemValue))
@@ -132,17 +140,19 @@ public class BasesActions
        return  child.find(locatorParent);
          }
 
-    public WebElementFacade getFromUnorderedListWebElementByText(By locator,String elementTag ,String visibleText){
+    public WebElementFacade getLinkByParentAndVisibleText(By locator, String visibleText){
 
         WebElementFacade ulList = currentPage.find(locator);
-        List<WebElementFacade> elements = ulList.thenFindAll(By.tagName(elementTag));
+        List<WebElementFacade> elements = ulList.thenFindAll(By.tagName("a"));
         for (WebElementFacade element : elements)
         {
             if (element.getText().equalsIgnoreCase(visibleText))
             {
+                System.out.println("The element is found "+element.getText());
                 return element;
             }
         }
+        System.out.println("The element is not found");
         return null;
     }
 
@@ -151,7 +161,7 @@ public class BasesActions
         return readsTextFrom( (WebElementFacade) currentPage.find( locator ) );
     }
 
-    @Step
+    @Step ("Reads the text from Web Element")
     public List<String> readsTextFromList( By listItemsLocator )
     {
         List<WebElementFacade> errorsItemsElements = currentPage.findAll( listItemsLocator );
@@ -171,11 +181,53 @@ public class BasesActions
         return getValueFrom((WebElementFacade) currentPage.find(locator));
     }
 
-    @Step
+    @Step ("Gets the value from Web Element")
     public String getValueFrom(WebElementFacade webElement){
         return webElement
                 .waitUntilVisible()
                 .getValue();
+    }
+
+    public Number getPriceFromCurrency(By locator){
+        String numericText = readsTextFrom((WebElementFacade) currentPage.find(locator));
+        NumberFormat number = NumberFormat.getCurrencyInstance(Locale.US);
+
+        try {
+            return number.parse(numericText);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Can't convert " + numericText + " to Double!");
+        }
+
+    }
+
+    public Number getPriceFromCurrency(WebElementFacade element){
+        String numericText = readsTextFrom(element);
+        NumberFormat number = NumberFormat.getCurrencyInstance(Locale.US);
+
+        try {
+            return number.parse(numericText);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Can't convert " + numericText + " to Double!");
+        }
+
+    }
+
+    public void setElementInVisibleScreen(By locator){
+
+        WebElementFacade element= (WebElementFacade) currentPage.find(locator);
+        Actions act = new Actions(currentPage.getDriver());
+        act.moveToElement(element).build().perform();
+    }
+
+    public void setElementInVisibleScreen(WebElementFacade element){
+        Actions act = new Actions(currentPage.getDriver());
+        act.moveToElement(element).build().perform();
+    }
+
+    public Float parseStringToFloat(String str){
+        return  Float.valueOf(str);
     }
 
 }

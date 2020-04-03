@@ -9,6 +9,16 @@ public class Item {
 
     private String color;
 
+    private String price;
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getArticle() {
         return article;
     }
@@ -40,4 +50,6 @@ public class Item {
     public void setColor(String color) {
         this.color = color;
     }
+
+
 }

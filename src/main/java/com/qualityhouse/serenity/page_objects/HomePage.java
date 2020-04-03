@@ -3,12 +3,14 @@ package com.qualityhouse.serenity.page_objects;
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
+import net.thucydides.core.annotations.DefaultUrl;
 import org.openqa.selenium.By;
 
 /**
  * @author yakimfb
  * @since 18.03.20
  **/
+@DefaultUrl("/")
 public class HomePage
         extends PageObject
 {
@@ -21,6 +23,7 @@ public class HomePage
     public  static final By MAIN_MENU =  By.cssSelector("ul[class^='sf-menu']");
 
     public static final By CATALOG_UL = By.cssSelector("ul.product_list.grid.row");
+
 
 
 }
